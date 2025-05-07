@@ -74,14 +74,14 @@ class _MyJsonWidgetState extends State<MyJsonWidget> {
 
         return ListView.builder(
             itemCount: movies.length,
-            prototypeItem: MovieListTile(
+            prototypeItem: CustomMovieListTile(
                 movie: movies.first
             ),
             itemBuilder: (context, index) {
-                return MovieListTile(
+                return CustomMovieListTile(
                     movie: movies[index]
                 );
-            },
+            }
         );
     }
 }
@@ -106,30 +106,72 @@ class Movie {
     }
 }
 
-class MovieListTile extends StatelessWidget {
+class CustomMovieListTile extends StatelessWidget {
     final Movie movie;
 
-
-    const MovieListTile({super.key, required this.movie});
+    const CustomMovieListTile({super.key, required this.movie});
 
     @override
     Widget build(BuildContext context) {
-        return ListTile(
-            leading: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(movie.images.first)
+        return Container(
+            height: 100,
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                    BoxShadow(
+                        color: Colors.black,
+                        spreadRadius: 1,
+                        blurRadius: 3
+                    )
+                ]
             ),
-            title: Text(movie.title),
-            subtitle: Text(movie.director),
-            trailing: Icon(Icons.arrow_forward),
-            onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MovieDetailsScreen(movie: movie),
-                    ),
-                );
-            },
+            child:
+            Material(
+                color: Colors.white,
+                child: InkWell(
+                    onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MovieDetailsScreen(movie: movie))
+                        );
+                    },
+                    splashColor: Colors.blue.withAlpha(76),
+                    hoverColor: Colors.blue.withAlpha(25),
+                    highlightColor: Colors.blue.withAlpha(51),
+                    child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                            children: [
+                                CircleAvatar(
+                                    backgroundImage: NetworkImage(movie.images.elementAt(0)),
+                                    radius: 30
+                                ),
+                                SizedBox(width: 20),
+                                Expanded(
+                                    child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                            Text(
+                                                movie.title,
+                                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                                            ),
+                                            Text(
+                                                movie.director,
+                                                style: TextStyle(fontSize: 14, color: Colors.blueGrey)
+                                            )
+                                        ]
+                                    )
+                                ),
+                                Icon(Icons.arrow_forward)
+                            ]
+                        )
+                    )
+                )
+            )
         );
     }
 }
